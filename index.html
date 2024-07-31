@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title> APICall</title>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css'>
+<link rel='stylesheet' href='https://unpkg.com/@mdi/font@6.x/css/materialdesignicons.min.css'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900'>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!-- Vueで指定された"app"要素、この中でのみVueが有効 -->
+<div id="app">
+  <v-app>
+    <v-content>
+      <v-container>
+        <v-row
+          class="text-h3 mb-3 mt-3"
+          justify="center"
+          >
+          APIに接続してみよう
+        </v-row>
+        <v-row
+          class="mb-3 mt-3"
+          align="center"
+          justify="center"
+          >
+          <v-col 
+            cols="4"            
+            >
+            <v-text-field
+                  class="ml-6 mr-6"
+                  v-model:value="ID"                         
+                  label="IDを入力"
+                  placeholder="IDを入力…"
+                  outlined
+            >
+          </v-col>
+            <v-col 
+            cols="6"            
+            >
+            <v-text-field
+                  class="ml-6 mr-6"
+                  v-model:value="Name"                         
+                  label="Nameを入力"
+                  placeholder="Nameを入力…"
+                  outlined
+            >
+          </v-col>
+        </v-row>
+        <v-row
+          class="mb-3 mt-3"
+          align="center"
+          justify="center"
+          >
+          入力内容　ID: {{ ID }} Name: {{ Name }}
+          <v-btn v-on:click="addData"               
+               dark
+               small               
+               color="indigo"
+               >DBに登録
+               </v-btn>
+        </v-row>
+        <v-row
+          class="mb-3 mt-3"
+          justify="center"
+          > 
+          <v-btn v-on:click="readData"                 
+                 rounded
+                 >現在の登録内容を表示する</v-btn>
+        </v-row>
+        <v-row 
+          class="mb-3 mt-3"
+          justify="center"
+          v-for="data in dataList">
+          ID:{{ data.ID }},Name:{{ data.Name }}
+        </v-row>
+      </v-container>
+    </v-content>
+  </v-app>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
