@@ -12,6 +12,8 @@ const app = new Vue({
       ],
       showSearchBar: false, //検索バー初期：false
       dataList: [], //商品メニュー表示用配列箱
+      filteredList: [],  // フィルタリングされた結果を表示するためのリスト
+      searchQuery: '',   // 検索クエリを保持
       detailsDialog: false, //商品詳細オーバレイ初期：false
       selectedItem: {},
       selectedSize: '', 
@@ -32,6 +34,18 @@ const app = new Vue({
     //検索バーの発生
     toggleSearchBar() {
       this.showSearchBar = !this.showSearchBar;
+    },
+     // 検索機能
+    filterData() {
+      if (this.searchQuery.trim() === '') {
+        this.filteredList = this.dataList; // 検索クエリが空なら全てのカードを表示
+      } else {
+        const lowerQuery = this.searchQuery.toLowerCase();
+        this.filteredList = this.dataList.filter(item => 
+        item.ItemName.toLowerCase().includes(lowerQuery) ||
+        item.ItemCategory.toLowerCase().includes(lowerQuery)
+      );
+      }
     },
     //カートの表示trueに変更
     async showCartDialog() {
@@ -80,6 +94,7 @@ const app = new Vue({
         const response = await axios.get('https://m3h-minaki-apishop.azurewebsites.net/api/SELECT?function=GetItemTable');
         console.log(response.data);
         this.dataList = response.data.List;
+        this.filterData();  // 初回ロード時にもフィルタリングを適用
       } catch (error) {
         console.error("データ取得エラー:", error);
       }

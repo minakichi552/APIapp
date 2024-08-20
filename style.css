@@ -1,12 +1,16 @@
+
 .fixed-top {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;  
-  }
-  
-  /* 上部の固定されたフッターのためのスペースを確保 */
- .content-with-padding {
-  padding-top: 100px !important; /* フッターの高さに合わせて調整 (この場合64px) */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;  
 }
+
+/* 上部の固定されたフッターのためのスペースを確保 */
+.content-with-padding {
+padding-top: 100px !important; /* フッターの高さに合わせて調整 (この場合64px) */
+}
+
+
+
