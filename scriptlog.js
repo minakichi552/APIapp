@@ -33,8 +33,6 @@ new Vue({
     console.error('Login error:', error);
   }
 },
-        goToSignup() {
-          window.location.href = 'signup.html'; // サインアップページへのリダイレクト
-        }
+      
       }
     });
