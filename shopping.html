@@ -21,7 +21,7 @@
         </v-col>
         <!-- ヘッダーメニューボタン表示　カート⇒オーバレイ　検索⇒検索表示 -->
         <v-col cols="12" class="text-center">
-          <v-btn v-for="link in links" :key="link" color="black" text rounded class="my-1" @click="link === 'Search' ? toggleSearchBar() : link === 'Cart' ? showCartDialog() :link === 'Category' ? showCategoryDialog() : null">
+          <v-btn v-for="link in links" :key="link" color="black" text rounded class="my-1" @click="link === 'Search' ? toggleSearchBar() : null">
             {{ link }}
           </v-btn>
         </v-col>

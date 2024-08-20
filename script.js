@@ -7,7 +7,6 @@ const app = new Vue({
       links: [
         'Home',
         'Search',
-        'Category',
         'Cart',
       ],
       showSearchBar: false, //検索バー初期：false
