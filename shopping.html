@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - APIShopping</title>
+  <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css'>
+<link rel='stylesheet' href='https://unpkg.com/@mdi/font@6.x/css/materialdesignicons.min.css'>
+<link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900'><link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div id="app">
+  <v-app id="inspire">
+    <!-- フッター上部固定 -->
+    <v-footer color="white" padless class="fixed-top" height="90px">
+      <v-row justify="center" no-gutters class="fill-height ma-0 pa-0">
+        <v-col class="py-2 text-center black--text" cols="12" style="background-color: #C9A66B;">
+          <!-- 年取得 -->
+          {{ new Date().getFullYear() }} — <strong>Vintage</strong>
+        </v-col>
+        <!-- ヘッダーメニューボタン表示　カート⇒オーバレイ　検索⇒検索表示 -->
+        <v-btn v-for="link in links" :key="link" color="black" text rounded class="my-1" @click="link === 'Search' ? toggleSearchBar() : link === 'Cart' ? showCartDialog() :link === 'Category' ? showCategoryDialog() : null">
+          {{ link }}
+        </v-btn>
+      </v-row>
+      <!-- 検索表示レイアウト -->
+      <v-row v-if="showSearchBar" class="search-bar-container">
+        <v-col cols="12" class="text-center">
+          <v-text-field label="Search" solo class="search-bar"/>
+        </v-col>
+      </v-row>
+    </v-footer>
+
+    <!-- ページの主内容 -->
+    <v-content class="content-with-padding">
+      <v-container>
+        
+        <!-- ユーザーID表示 -->
+        <v-row class="mb-3 mt-3" justify="center">
+          <v-col class="text-center">
+            <v-typography variant="h6">
+              Welcome to {{ userName }} さん
+            </v-typography>
+          </v-col>
+        </v-row>
+      
+        <!-- 商品メニュー表示 カード表示 --> 
+        <v-row class="mb-3 mt-3" align="center" justify="center">
+          <v-col v-for="data in dataList" :key="data.ItemId" cols="12" sm="6" md="4" lg="3">
+            <!-- クリック時商品詳細オーバレイ表示設定 --> 
+            <v-card @click="showDetails(data)">
+              <!-- 画像表示 --> 
+              <v-img :src="data.ItemImg" aspect-ratio="1.75" class="mb-2"></v-img>
+              <!-- 商品名表示 --> 
+              <v-card-title class="subheading font-weight-bold">
+                {{ data.ItemName }}
+              </v-card-title>
+              <!-- カテゴリー表示 --> 
+              <v-card-subtitle>
+                {{ data.ItemCategory }}
+              </v-card-subtitle>
+              <!-- 価格表示 --> 
+              <v-card-text>
+                ￥{{ data.ItemPrice }}
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+
+        <!-- 商品詳細のオーバーレイ -->
+        <v-dialog v-model="detailsDialog" max-width="800px">
+          <v-card>
+            <v-card-title class="headline">商品詳細</v-card-title>
+            <v-card-text>
+              <v-row>
+                <!-- 商品画像 -->
+                <v-col cols="12" md="4" class="d-flex justify-center">
+                  <v-img
+                    :src="selectedItem.ItemImg"
+                    height="300px"
+                    contain
+                  ></v-img>
+                </v-col>
+                <!-- 商品詳細 -->
+                <v-col cols="12" md="8">
+                  <v-list dense>
+                    <!-- 商品名 -->
+                    <v-list-item>
+                      <v-list-item-content>商品名:</v-list-item-content>
+                      <v-list-item-content class="align-end">
+                        {{ selectedItem.ItemName }}
+                      </v-list-item-content>
+                    </v-list-item>
+                    <!-- 商品価格 -->
+                    <v-list-item>
+                      <v-list-item-content>価格:</v-list-item-content>
+                      <v-list-item-content class="align-end">
+                        ¥{{ selectedItem.ItemPrice }}
+                      </v-list-item-content>
+                    </v-list-item>            
+                    <!-- サイズ選択 -->
+                    <v-list-item>
+                      <v-list-item-content>サイズ:</v-list-item-content>
+                      <v-list-item-content class="align-end">
+                        <v-select
+                          v-model="selectedSize"
+                          :items="sizes"
+                          label="サイズを選択"
+                          outlined
+                        ></v-select>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <!-- 個数入力 -->
+                    <v-list-item>
+                      <v-list-item-content>個数:</v-list-item-content>
+                      <v-list-item-content class="align-end">
+                        <v-text-field
+                          v-model="num"
+                          type="number"
+                          min="1"
+                          label="個数を入力"
+                          outlined
+                        ></v-text-field>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <!-- カートに追加ボタン -->
+            <v-card-actions>
+              <v-btn color="#EBDCB2" @click="addToCart">カートに追加</v-btn>
+              <v-btn text @click="detailsDialog = false">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+        
+        <!-- カートのオーバーレイ -->
+        <v-dialog v-model="cartDialog" max-width="600px">
+          <v-card>
+            <v-card-title class="headline">Cart</v-card-title>
+            <v-card-subtitle class="mb-2">登録されているデータ:</v-card-subtitle>
+            <v-card-text>
+              <v-row>
+                <v-col v-for="item in cartItems" :key="item.item_id" cols="12" sm="6" md="4">
+                  <v-card>
+                    <v-card-title class="subheading font-weight-bold">
+                      {{ item.ItemName }}
+                    </v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
+                      <v-row>
+                        <v-col cols="6">
+                          <v-img :src="item.ItemImg" height="150px" contain></v-img>
+                        </v-col>
+                        <v-col cols="6">
+                          <div>価格: ¥{{ item.ItemPrice }}</div>
+                          <div>サイズ: {{ item.Size }}</div>
+                          <div>個数: {{ item.Num }}</div>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <v-btn @click="removeFromCart(item.CartId)" color="#EBDCB2">削除</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                </v-col>
+              </v-row>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn text @click="cartDialog = false">Close</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+      </v-container>
+    </v-content>
+  </v-app>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.11/vue.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/axios/1.7.2/axios.min.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
