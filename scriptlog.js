@@ -23,7 +23,7 @@ new Vue({
       sessionStorage.setItem('userName', user.UserName); // userName を保存
       console.log("Saved user_id:", sessionStorage.getItem('user_id')); // デバッグ用
       console.log("Saved userName:", sessionStorage.getItem('userName')); // デバッグ用
-      window.location.href = 'shipping.html';
+      window.location.href = 'shopping.html';
       //window.location.href = 'https://codepen.io/minakichi552/pen/gONXaya?editors=1010'; // 特定のURLにリダイレクト
     } else {
       this.errorMessage = 'Invalid User Name or Password';
