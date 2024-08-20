@@ -20,16 +20,22 @@
           {{ new Date().getFullYear() }} — <strong>Vintage</strong>
         </v-col>
         <!-- ヘッダーメニューボタン表示　カート⇒オーバレイ　検索⇒検索表示 -->
-        <v-btn v-for="link in links" :key="link" color="black" text rounded class="my-1" @click="link === 'Search' ? toggleSearchBar() : link === 'Cart' ? showCartDialog() :link === 'Category' ? showCategoryDialog() : null">
-          {{ link }}
-        </v-btn>
-      </v-row>
-      <!-- 検索表示レイアウト -->
-      <v-row v-if="showSearchBar" class="search-bar-container">
         <v-col cols="12" class="text-center">
-          <v-text-field label="Search" solo class="search-bar"/>
+          <v-btn v-for="link in links" :key="link" color="black" text rounded class="my-1" @click="link === 'Search' ? toggleSearchBar() : link === 'Cart' ? showCartDialog() :link === 'Category' ? showCategoryDialog() : null">
+            {{ link }}
+          </v-btn>
         </v-col>
       </v-row>
+      <!-- 検索表示レイアウト -->
+      <v-col v-if="showSearchBar" cols="12" class="text-center">
+        <v-text-field 
+          v-model="searchQuery" 
+          @input="filterData" 
+          label="ItemSearch" 
+          solo 
+          class="search-bar"
+        />
+      </v-col>
     </v-footer>
 
     <!-- ページの主内容 -->
@@ -47,7 +53,7 @@
       
         <!-- 商品メニュー表示 カード表示 --> 
         <v-row class="mb-3 mt-3" align="center" justify="center">
-          <v-col v-for="data in dataList" :key="data.ItemId" cols="12" sm="6" md="4" lg="3">
+          <v-col v-for="data in filteredList" :key="data.ItemId" cols="12" sm="6" md="4" lg="3">
             <!-- クリック時商品詳細オーバレイ表示設定 --> 
             <v-card @click="showDetails(data)">
               <!-- 画像表示 --> 
